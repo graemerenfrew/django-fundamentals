@@ -1,11 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Home</title>
-</head>
-<body>
-    <h1>Welcome</h1>
-    <h3>This page was generated with a django template</h3>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Welcome {{ user.username }}</h1>
+    These are your active games:
+    <ul>
+        {% for g in games %}
+            <li>Game {{g.id}}: {{g.first_player}} vs {{ g.second_player}}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
