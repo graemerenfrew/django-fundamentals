@@ -4,6 +4,7 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Q
+from django.urls import reverse
 
 GAME_STATUS_CHOICES = {
     ('F', 'First Player to Move'),
@@ -47,6 +48,10 @@ class Game(models.Model):
 
     def __str__(self):
         return "{0} vs {1}".format(self.first_player, self.second_player)
+
+    def get_absolute_url(self):
+        ''' this tells django what the canonical URL is for a model instance.  reverse constructs a url for us'''
+        return reverse('gameplay_detail', args=[self.id])
 
 
 class Move(models.Model):

@@ -66,7 +66,8 @@ def accept_invitation(request, id):
                 second_player=invitation.from_user
             )
         invitation.delete()
-        return redirect('player_home')
+        #return redirect('player_home')
+        return redirect(game) #this will call get_absolute_url for the game object
     else:
         return render(request,
                       "player/accept_invitation_form.html",
