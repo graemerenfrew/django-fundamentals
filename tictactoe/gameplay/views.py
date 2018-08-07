@@ -1,6 +1,7 @@
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 from .models import Game
 from .forms import MoveForm
@@ -11,13 +12,12 @@ from .forms import MoveForm
 @login_required
 def game_detail(request, id):
     game = get_object_or_404(Game, pk=id)
-    context = {'game':game}
-
+    context = {'game': game}
     if game.is_users_move(request.user):
         context['form'] = MoveForm()
     return render(request,
                   "gameplay/game_detail.html",
-                  {'game': game })
+                  context )
 
 
 @login_required
@@ -33,4 +33,5 @@ def make_move(request, id):
     else:
         return render(request,
                       "gameplay/gameplay_detail.html",
-                      {'game':game, 'form':form})
+                      {'game' : game, 'form' : form}
+                      )

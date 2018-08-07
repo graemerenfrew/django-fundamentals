@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from gameplay.models import Game
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
+from django.contrib import messages
 
 from .forms import InvitationForm
 from .models import Invitation
