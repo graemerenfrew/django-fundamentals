@@ -124,3 +124,8 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static")
 ]
+
+#we need this as we don't have account/profile pages, which is where LoginView defaults us to
+LOGIN_REDIRECT_URL="player_home"
+LOGOUT_REDIRECT_URL="tictactoe_welcome"
+LOGIN_URL="player_login"
