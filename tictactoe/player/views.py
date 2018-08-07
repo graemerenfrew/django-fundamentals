@@ -32,7 +32,7 @@ def home(request):
     active_games = my_games.active()
 
     #get the invitations this currently logged in user has received
-    invitations = request.user.invitations_receieved.all()
+    invitations = request.user.invitations_received.all()
 
     return render(request, "player/home.html",
                   {'games': active_games, 'invitations': invitations})
@@ -59,7 +59,7 @@ def accept_invitation(request, id):
     if not request.user == invitation.to_user:
         raise PermissionDenied
 
-    if requst.method == "POST":
+    if request.method == "POST":
         if "accept" in request.POST:
             game = Game.objects.create(
                 first_player=invitation.to_user,
