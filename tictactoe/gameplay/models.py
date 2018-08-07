@@ -13,6 +13,7 @@ GAME_STATUS_CHOICES = {
     ('L', 'Second Player Wins'),
     ('D', 'Draw'),
 }
+BOARD_SIZE = 3
 
 class GameQuerySet(models.QuerySet):
     ''' this will represent a collection of objects from the database'''
@@ -46,6 +47,13 @@ class Game(models.Model):
     #Create an overwritten manager object that will contain the objects from the GamesQuerySet custom object
     objects = GameQuerySet.as_manager()
 
+    def board(self):
+        ''' return a 2d list of Move objects so we can find the state of a square at y,x '''
+        board=[[ None for x in range(BOARD_SIZE)] for y in range(BOARD_SIZE)]
+        for move in self.move_set.all():
+            board[move.y][move.x] = move
+        return board
+
     def __str__(self):
         return "{0} vs {1}".format(self.first_player, self.second_player)
 
@@ -62,3 +70,4 @@ class Move(models.Model):
 
     game = models.ForeignKey(Game,
                              on_delete=models.CASCADE)
+    by_first_player = models.BooleanField(editable=False)
