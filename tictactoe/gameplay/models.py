@@ -5,6 +5,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Q
 from django.urls import reverse
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 GAME_STATUS_CHOICES = {
     ('F', 'First Player to Move'),
@@ -54,6 +55,10 @@ class Game(models.Model):
             board[move.y][move.x] = move
         return board
 
+    def is_users_move(self, user):
+        return (user == self.first_player and self.status == 'F') or\
+                (user == self.second_player and self.status =='S')
+
     def __str__(self):
         return "{0} vs {1}".format(self.first_player, self.second_player)
 
@@ -61,13 +66,29 @@ class Game(models.Model):
         ''' this tells django what the canonical URL is for a model instance.  reverse constructs a url for us'''
         return reverse('gameplay_detail', args=[self.id])
 
+    def new_move(self):
+        ''' returns a new move object'''
+        if self.status not in 'FS':
+            raise ValueError("Cannot make a move as this game is over!")
+        return Move(
+            game=self,
+            by_first_player=self.status == 'F'
+        )
+
 
 class Move(models.Model):
-    x = models.IntegerField()
-    y = models.IntegerField()
+    #lets make sure the moves we enter are valid
+    x = models.IntegerField(
+        validators=[MinValueValidator(0),
+                    MaxValueValidator(BOARD_SIZE-1)]
+    )
+    y = models.IntegerField(
+        validators=[MinValueValidator(0),
+                    MaxValueValidator(BOARD_SIZE-1)])
     comment = models.CharField(max_length=300, blank=True)
     by_first_player = models.BooleanField()
 
-    game = models.ForeignKey(Game,
+    game = models.ForeignKey(Game, editable=False,
                              on_delete=models.CASCADE)
     by_first_player = models.BooleanField(editable=False)
+

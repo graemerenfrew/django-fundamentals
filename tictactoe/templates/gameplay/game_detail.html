@@ -25,6 +25,7 @@
 {% endblock styling %}
 
 {% block content %}
+
     <div class="col-md-5">
 
         {% if game.status == 'F' %}
@@ -69,5 +70,7 @@
                 <button type="submit">Make move</button>
             </form>
         </div>
+    {% else %}
+    <h2>form was not returned</h2>
     {% endif %}
 {% endblock content %}
